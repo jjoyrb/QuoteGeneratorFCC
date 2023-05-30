@@ -4,7 +4,7 @@ import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
 
 // Components
-import { BackgroundImage1,BackgroundImage2, FooterCon, FooterLink, GradientBackgroundCon, RedSpan} from '@/components/QuoteGenerator/QuoteGeneratorElements'
+import { BackgroundImage1,BackgroundImage2, FooterCon, FooterLink, GenerateQuoteButton, GenerateQuoteButtonText, GradientBackgroundCon, QuoteGEneratorInnerCon, QuoteGeneratorCon, QuoteGeneratorSubTitle, QuoteGeneratorTitle, RedSpan} from '@/components/QuoteGenerator/QuoteGeneratorElements'
 
 // Assets
 import Clouds1 from '@/assets/cloud-and-thunder.png'
@@ -25,17 +25,38 @@ export default function Home() {
       {/* Background */}
       <GradientBackgroundCon>
 
-        <BackgroundImage1
+      {/* Quote Generator Modal Pop-Up*/}
+      {/* <QuoteGeneratorModal
+      /> */}
+
+      {/* Quote Generator */}
+      <QuoteGeneratorCon>
+        <QuoteGEneratorInnerCon>
+          <QuoteGeneratorTitle>
+            <QuoteGeneratorSubTitle>
+              Looking for a splash of inspiration? Generate a quote card with a random inspirational quote provided by <FooterLink href="https://zemquotes.io/" target="_blank" rel="noopener noreferrer">ZemQuotes API</FooterLink>
+            </QuoteGeneratorSubTitle>
+            <GenerateQuoteButton>
+              <GenerateQuoteButtonText onClick={null}>
+                Make a Quote
+              </GenerateQuoteButtonText>
+            </GenerateQuoteButton>
+          </QuoteGeneratorTitle>
+        </QuoteGEneratorInnerCon>
+      </QuoteGeneratorCon>
+
+      {/* Background Images */}
+      <BackgroundImage1
         src={Clouds1}
         height="300"
         alt="cloudybackground1"
-        />
+      />
 
       <BackgroundImage2
         src={Clouds2}
         height="300"
         alt="cloudybackground1"
-        />
+      />
 
       <FooterCon>
         <>
