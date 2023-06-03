@@ -34,7 +34,7 @@ export default function Home() {
         <QuoteGEneratorInnerCon>
           <QuoteGeneratorTitle>
             <QuoteGeneratorSubTitle>
-              Looking for a splash of inspiration? Generate a quote card with a random inspirational quote provided by <FooterLink href="https://zemquotes.io/" target="_blank" rel="noopener noreferrer">ZemQuotes API</FooterLink>
+              Looking a verse of the day? Generate a verse card with the verse of the day <FooterLink href="https://bible.org" target="_blank" rel="noopener noreferrer">from the NET Bible</FooterLink>
             </QuoteGeneratorSubTitle>
             <GenerateQuoteButton>
               <GenerateQuoteButtonText onClick={null}>
