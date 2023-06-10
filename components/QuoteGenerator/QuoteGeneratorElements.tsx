@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Link from "next/link";
 import Image from "next/image";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 
 export const GradientBackgroundCon = styled.div`
   background: linear-gradient(to right, #000046, #1cb5e0);
@@ -83,19 +83,6 @@ export const QuoteGEneratorInnerCon = styled.div`
     transform: translate(-50%,-50%);
     position: absolute;
     width: 100%;
-`;
-
-export const QuoteGeneratorTitle = styled.div`
-    font-family: 'Permanent Marker', cursive;
-    font-size: 50px;
-    text-align: center;
-    color: white;
-    padding: 0px 20px 0px 20px;
-    position: relative;
-    /* media query */
-    @media only screen and (max-width: 600px) {
-        font-size: 30px;
-    }
 `;
 
 export const QuoteGeneratorSubTitle = styled.div`
@@ -181,12 +168,25 @@ export const QuoteGeneratorModalInnerCon = styled.div`
     position: relative;
 `;
 
-/*export const ModalCircularProgress = styled(CircularProgress)`
+export const ModalCircularProgress = styled(CircularProgress)`
     color: white !important;
     stroke-linecap: round;
     position: relative;
     /* to account for the larger element pushing left */
- /*   margin-left: -55px;
+    margin-left: -55px;
     left: 50%;
     transform: translateX(-50%);
-`; }*/
+`;
+
+export const QuoteGeneratorTitle = styled.div`
+    font-family: 'Permanent Marker', cursive;
+    font-size: 50px;
+    text-align: center;
+    color: white;
+    padding: 0px 20px 0px 20px;
+    position: relative;
+    /* media query */
+    @media only screen and (max-width: 600px) {
+        font-size: 30px;
+    }
+`;
