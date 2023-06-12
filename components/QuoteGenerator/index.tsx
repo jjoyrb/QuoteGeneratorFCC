@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 // Material UI components
 import { Backdrop, Fade, Modal } from '@mui/material'
 import { ModalCircularProgress, QuoteGeneratorModalCon, QuoteGeneratorModalInnerCon, QuoteGeneratorSubTitle, QuoteGeneratorTitle } from './QuoteGeneratorElements';
+import ImageBlob from '../animations/ImageBlob';
+import { ImageBlobCon } from '../animations/AnimationElements';
+import AnimatedDownloadButton from '../animations/AnimatedDownloadButton';
 
 interface QuoteGeneratorModalProps {
     open: boolean,
@@ -26,8 +29,37 @@ const QuoteGeneratorModal = ({
     setQuoteReceived,
 }: QuoteGeneratorModalProps) => {
 
-    const wiseDevQuote = '"This is the word of the Lord."';
-    const wiseDevQuoteAuthor = '"Thanks be to God."';
+    const wiseDevQuote = 'This is the word of the Lord.';
+    const wiseDevQuoteAuthor = 'Thanks be to God.';
+    
+    const [blobUrl, setBlobUrl] = useState<string | null>(null);
+
+    //Function: Handling the download of quote card
+    const handleDownload = () => {
+        const link = document.createElement('a');
+        if (typeof blobUrl === 'string') {
+            link.href = blobUrl;
+            link.download = 'quote.png';
+            link.click();
+        }
+    };
+
+
+    //Function: handle the receiving of quote card
+    useEffect(() => {
+        if (quoteReceived) {
+            const binaryData = Buffer.from(quoteReceived, 'base64');
+            const blob = new Blob([binaryData], { type: 'image/png' });
+            const blobUrlGenerated = URL.createObjectURL(blob);
+            console.log(blobUrlGenerated);
+            setBlobUrl(blobUrlGenerated);
+
+            return () => {
+                URL.revokeObjectURL(blobUrlGenerated);
+            }
+        }
+    }, [quoteReceived]);
+
     return (
         <Modal
             id="QuoteGeneratorModal"
@@ -46,7 +78,7 @@ const QuoteGeneratorModal = ({
                     <QuoteGeneratorModalInnerCon>
                         {/* State #1: processing request of Qupte + quote state is empty */}
                         
-                            {(processingQuote == true && quoteReceived == null) && 
+                            {(processingQuote === true && quoteReceived === null) && 
                             <>
                                 <ModalCircularProgress
                                     size={"8rem"}
@@ -63,6 +95,25 @@ const QuoteGeneratorModal = ({
                             </>
                             }
                         {/* State #2: Quote State fulfilled*/}
+                        {quoteReceived !== null &&
+                            <>
+                                <QuoteGeneratorTitle>
+                                    Download your quote!
+                                </QuoteGeneratorTitle>
+                                <QuoteGeneratorSubTitle style={{marginTop: "20px"}}>
+                                    See a preview
+                                </QuoteGeneratorSubTitle>
+                                <ImageBlobCon>
+                                    <ImageBlob
+                                        quoteReceived = {quoteReceived}
+                                        blobUrl={blobUrl}
+                                    />
+                                </ImageBlobCon>
+                                <AnimatedDownloadButton
+                                    handleDownload={handleDownload}
+                                />
+                            </>
+                        }
 
                     </QuoteGeneratorModalInnerCon>
                 </QuoteGeneratorModalCon>

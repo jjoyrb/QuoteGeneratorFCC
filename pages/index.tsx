@@ -11,8 +11,17 @@ import QuoteGeneratorModal from '@/components/QuoteGenerator'
 import Clouds1 from '@/assets/cloud-and-thunder.png'
 import Clouds2 from '@/assets/cloudy-weather.png'
 import { API } from 'aws-amplify'
-import { quotesQueryName } from '@/src/graphql/queries'
+import { generateAQuote, quotesQueryName } from '@/src/graphql/queries'
 import { GraphQLResult } from '@aws-amplify/api-graphql'
+
+//interface for our appsync <> lambda JSON response
+interface GenerateAQuoteData {
+  generateAQuote: {
+    statusCode: number;
+    headers: { [key: string]: string };
+    body: string;
+  }
+}
 
 // interface for our dynamodb object
 interface UpdateQuoteInfoData {
@@ -77,6 +86,8 @@ useEffect(() => {
 //Function for quote generator
 const handleCloseGenerator = () => {
   setOpenGenerator(false);
+  setProcessingQuote(false);
+  setQuoteReceived(null);
 }
 
 
@@ -85,7 +96,34 @@ const handleOpenGenerator = async (e: React.SyntheticEvent) => {
   setOpenGenerator(true);
   setProcessingQuote(true);
   try {
-    //run lambda function
+   // Run Lambda Function
+   const runFunction = "runFunction";
+   const runFunctionStringified = JSON.stringify(runFunction);
+   const response = await API.graphql<GenerateAQuoteData>({
+     query: generateAQuote,
+     authMode: "AWS_IAM",
+     variables: {
+       input: runFunctionStringified,
+     },
+   });
+   const responseStringified = JSON.stringify(response);
+   const responseReStringified = JSON.stringify(responseStringified);
+   const bodyIndex = responseReStringified.indexOf("body=") + 5;
+   const bodyAndBase64 = responseReStringified.substring(bodyIndex);
+   const bodyArray = bodyAndBase64.split(",");
+   const body = bodyArray[0];
+   console.log(body);
+   setQuoteReceived(body);
+
+    //End State:
+    setProcessingQuote(false);
+
+    //Fetch if any new quotes were generated from counter
+    updateQuoteInfo();
+
+    setTimeout(() => {
+      setProcessingQuote(false);
+    }, 3000)
   } catch (error) {
     console.log('error getting quote data',error);
     setProcessingQuote(false);
@@ -118,12 +156,10 @@ const handleOpenGenerator = async (e: React.SyntheticEvent) => {
         <QuoteGEneratorInnerCon>
           <QuoteGeneratorTitle>
             <QuoteGeneratorSubTitle>
-              Looking a verse of the day? Generate a verse card with the verse of the day <FooterLink href="https://bible.org" target="_blank" rel="noopener noreferrer">from the NET Bible</FooterLink>
+              Looking for the verse of the day? <br></br> Generate a verse card with the verse of the day <FooterLink href="https://bible.org" target="_blank" rel="noopener noreferrer">from the NET Bible</FooterLink>
             </QuoteGeneratorSubTitle>
-            <GenerateQuoteButton>
-              <GenerateQuoteButtonText 
-                onClick={handleOpenGenerator}
-              >
+            <GenerateQuoteButton onClick={handleOpenGenerator}>
+              <GenerateQuoteButtonText>
                 Make a Quote
               </GenerateQuoteButtonText>
             </GenerateQuoteButton>
